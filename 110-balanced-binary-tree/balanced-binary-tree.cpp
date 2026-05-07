@@ -20,8 +20,7 @@ public:
         return max(lh, rh) + 1;
     }
     bool isBalanced(TreeNode* root) {
-        if (root == NULL)
-            return true;
+        if (root == NULL) return true;
         int leftHeight = getHeight(root->left);
         int rightHeight = getHeight(root->right);
 
