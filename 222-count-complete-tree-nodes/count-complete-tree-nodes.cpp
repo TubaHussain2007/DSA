@@ -10,17 +10,34 @@
  * };
  */
 class Solution {
-    private:
-    void cntNodes(TreeNode* root, int &cnt){
-        if(root == nullptr) return;
-        cnt++;
-        cntNodes(root->left, cnt);
-        cntNodes(root->right, cnt);
+    public :
+    int countNodes(TreeNode* root) {
+        if (root == nullptr) {
+            return 0;
+        }
+        
+        int lh = findHeightLeft(root);
+        int rh = findHeightRight(root);
+
+        if (lh == rh) {
+            return (1 << lh) - 1; 
+        }
+        return 1 + countNodes(root->left) + countNodes(root->right);
     }
-public:
-    int countNodes(TreeNode* root) { 
-        int cnt =0; 
-        cntNodes(root, cnt);
-        return cnt;
+    int findHeightLeft(TreeNode* node) {
+        int height = 0;
+        while (node) {
+            height++;
+            node = node->left;
+        }
+        return height;
+    }
+    int findHeightRight(TreeNode* node) {
+        int height = 0;
+        while (node) {
+            height++;
+            node = node->right;
+        }
+        return height;
     }
 };
