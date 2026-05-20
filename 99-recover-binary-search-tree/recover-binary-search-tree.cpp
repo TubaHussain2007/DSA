@@ -12,29 +12,32 @@
  */
 class Solution {
 public:
-    TreeNode *p = NULL, *l = NULL, *m = NULL, *h = NULL;
-    bool f = 0;
-    void Solve(TreeNode* root) {
-        if (root == NULL)
-            return;
-        Solve(root->left);
-        if (p != NULL && p->val > root->val) {
-            if (f == 0) {
-                l = p;
-                m = root;
-                f = 1;
-            } else {
-                h = root;
-            }
-        }
-        p = root;
-        Solve(root->right);
-    }
     void recoverTree(TreeNode* root) {
-        Solve(root);
-        if (h == NULL)
-            swap(l->val, m->val);
-        else
-            swap(l->val, h->val);
+        TreeNode *first = nullptr, *middle = nullptr, *last = nullptr,
+                 *prev = nullptr;
+        function<void(TreeNode*)> inorder = [&](TreeNode* node) {
+            if (!node)
+                return;
+            inorder(node->left);
+            if (prev && prev->val > node->val) {
+                if (!first) {
+                    first = prev;
+                    middle = node;
+                } else {
+                    last = node;
+                }
+            }
+
+            prev = node;
+            inorder(node->right);
+        };
+
+        inorder(root);
+
+        if (first && last) {
+            swap(first->val, last->val);
+        } else if (first && middle) {
+            swap(first->val, middle->val);
+        }
     }
 };
