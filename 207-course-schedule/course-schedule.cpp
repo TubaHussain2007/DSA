@@ -1,31 +1,40 @@
 class Solution {
 public:
-   bool detectcycle(vector<vector<int>>&v,int src,vector<int>&rst,vector<int>&vis){
-        vis[src] = 1;
-        rst[src]=1;
-        for(auto x:v[src]){
-            if(!vis[x]&&detectcycle(v,x,rst,vis)){
-                return true;
+    bool canFinish(int V, vector<vector<int>>& arr) {
+        vector<int> adj[V];
+
+        for (auto it : arr) {
+            adj[it[1]].push_back(it[0]);
+        }
+
+        vector<int> indegree(V, 0);
+        for (int i = 0; i < V; i++) {
+            for (auto it : adj[i]) {
+                indegree[it]++;
             }
-            else if(rst[x]==1)
-            return true;
         }
-        rst[src]=0;
-        return false;
-    }
-    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
-        vector<vector<int>>v(numCourses);
-        stack<int>s;
-        vector<int>vis(numCourses),rst(numCourses);
-        for(auto x: prerequisites){
-            v[x[1]].push_back(x[0]);
+
+        queue<int> q;
+        for (int i = 0; i < V; i++) {
+            if (indegree[i] == 0) {
+                q.push(i);
+            }
         }
-        for(int i=0;i<numCourses;i++){
-           if(!vis[i])
-           if(detectcycle(v,i,rst,vis))
-           return false;
+
+        vector<int> topo;
+
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop();
+            topo.push_back(node);
+
+            for (auto it : adj[node]) {
+                indegree[it]--;
+                if (indegree[it] == 0) {
+                    q.push(it);
+                }
+            }
         }
-       
-        return true;
+        return topo.size() == V;
     }
 };
